@@ -16,8 +16,19 @@
         <p>
             Source : <a href="https://en.wikipedia.org/wiki/Pomodoro_Technique">Wikipedia</a>
         </p>
+        <p>Copyright &copy;<span v-text="year"></span> <a href="https://mhbproject.com">MHB Project</a></p>
     </section>
 </template>
+
+<script>
+export default {
+    data() {
+        return {
+            year: new Date().getFullYear()
+        }
+    }
+}
+</script>
 
 <style scoped>
 
