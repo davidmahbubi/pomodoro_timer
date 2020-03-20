@@ -1,17 +1,21 @@
 <template>
   <div class="home py-3">
-    <pomodoro-article></pomodoro-article>
+    <b-row>
+      <b-col md="6">
+        <input-form></input-form>
+      </b-col>
+    </b-row>
   </div>
 </template>
 
 <script>
-  
-  import PomodoroArticle from '@/components/PomodoroArticle.vue';
+
+  import InputForm from '@/components/InputForm.vue';
 
   export default {
     name: 'Home',
     components: {
-      PomodoroArticle
+      InputForm
     }
   }
   

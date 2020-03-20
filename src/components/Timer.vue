@@ -2,10 +2,10 @@
 
 <b-row class="text-white">
     <b-col class="timer-container text-center">
-        <b-progress :value="session" :max="totalSession" class="top-progress" variant="danger"></b-progress>
+        <b-progress :value="getSession" :max="getSessionLim" class="top-progress" variant="danger"></b-progress>
         <h1 class="timer-text mb-0"><strong>{{ showTimer }}</strong></h1>
         <h5>
-            {{ session }} session(s) finished of {{ totalSession }}
+            {{ getSession }} session(s) finished of {{ getSessionLim }}
         </h5>
         <ul class="control-container mt-3 mb-0">
             <li>
@@ -15,7 +15,7 @@
             </li>
             <li>
                 <b-button class="mx-2 p-0" variant="transparent">
-                    <b-icon-pause-fill class="control-icon" @click="stopInterval"></b-icon-pause-fill>
+                    <b-icon-pause-fill class="control-icon" @click="pauseTimer"></b-icon-pause-fill>
                 </b-button>
             </li>
             <li>
@@ -31,45 +31,42 @@
 
 <script>
 
-let time = 5;
-let interval = 10;
-
 export default {
+
     data() {
         return {
-            dataTime: time,
-            counterTimer: null,
-            session: 0,
-            totalSession: 2,
-            interval: interval
+            counterTimer: null
         }
     },
+
     methods: {
 
         startInterval(){
 
-            if (this.session === this.totalSession) {
+            const dataEl = this;
+
+            if ((this.$store.state.session - 1) == this.$store.state.sessionLimit) {
                 return;
             }
 
-            const data = this;
-
             this.counterTimer = setInterval(function(){
 
-                data.dataTime--
+                dataEl.$store.commit('decreaseTime')
 
-                if (data.dataTime <= 0) data.timeUp()
+                if ( dataEl.$store.state.time <= 0) dataEl.timeUp()
 
             }, 1000);
 
         },
-        stopInterval() {
+
+        pauseTimer() {
             clearInterval(this.counterTimer);
         },
+
         resetTimer() {
             clearInterval(this.counterTimer);
-            this.dataTime = time;
-            this.session = 0;
+            this.$store.state.time = this.$store.state.timeLimit
+            this.$store.state.session = 1;
         },
 
         timeUp() {
@@ -77,35 +74,49 @@ export default {
             this.$emit('fire-notify');
 
             this.$emit('show-toast', {
-                title: `Session ${this.session} end`,
+                title: `Session ${this.$store.state.session} end`,
                 message: 'Its time to break :)',
                 variant: 'primary',
                 solid: true
             })
 
             clearInterval(this.counterTimer);
-
-            this.session++
             
-            if (this.session >= this.totalSession) {
+            if (this.$store.state.session > this.$store.state.sessionLimit) {
                 return;
             }
-            
-            this.dataTime = time
 
-            if (this.session % 2 == 1) this.dataTime += this.interval
+            this.$store.commit('increaseSession');
+            
+            this.$store.state.time = this.$store.state.timeLimit;
+
+            if (this.$store.state.session % 2 == 1) this.$store.state.time += this.$store.state.interval
 
         },
         stopApp() {
 
         }
     },
+
     computed: {
+
         showTimer() {
-            let minute = Math.floor(this.dataTime / 60);
-            let second = this.dataTime % 60;
+            let minute = Math.floor(this.$store.state.time / 60);
+            let second = this.$store.state.time % 60;
             return `${minute < 10 ? String('0').concat(minute) : minute}:${second < 10 ? String('0').concat(second) : second}`;
-        }
+        },
+
+        getSessionLim() {
+            return this.$store.state.sessionLimit;
+        },
+
+        getSession() {
+            return this.$store.state.session - 1;
+        },
+
+        getInterval() {
+            return this.$store.state.interval;
+        },
     }
 }
 

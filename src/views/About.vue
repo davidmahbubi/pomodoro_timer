@@ -1,5 +1,17 @@
 <template>
   <div class="about">
-    <h1>This is an about page</h1>
+    <pomodoro-article></pomodoro-article>
   </div>
 </template>
+
+<script>
+
+  import PomodoroArticle from '@/components/PomodoroArticle.vue';
+
+  export default {
+    name: 'Home',
+    components: {
+      PomodoroArticle
+    }
+  }
+</script>
