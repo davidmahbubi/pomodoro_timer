@@ -1,7 +1,7 @@
 <template>
   <div class="home py-3">
     <b-row>
-      <b-col md="6">
+      <b-col>
         <input-form></input-form>
       </b-col>
     </b-row>

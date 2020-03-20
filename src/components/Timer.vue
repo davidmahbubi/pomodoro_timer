@@ -93,9 +93,6 @@ export default {
             if (this.$store.state.session % 2 == 1) this.$store.state.time += this.$store.state.interval
 
         },
-        stopApp() {
-
-        }
     },
 
     computed: {
